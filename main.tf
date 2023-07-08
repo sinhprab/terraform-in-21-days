@@ -9,57 +9,57 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public01" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/24"
-  availability_zone = "eu-west-1"
+  availability_zone = "eu-west-2a"
   tags = {
-    Name = "Public01"
+    Name = "public01"
   }
 }
 
 resource "aws_subnet" "public02" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "eu-west-2"
+  availability_zone = "eu-west-2b"
   tags = {
-    Name = "Public02"
+    Name = "public02"
   }
 }
 
 resource "aws_subnet" "private01" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "eu-west-1"
+  availability_zone = "eu-west-2a"
   tags = {
-    Name = "Private01"
+    Name = "private01"
   }
 }
 
 resource "aws_subnet" "private02" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = "eu-west-2"
+  availability_zone = "eu-west-2b"
   tags = {
-    Name = "Private02"
+    Name = "private02"
   }
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = "Main"
+    Name = "main"
   }
 }
 
 resource "aws_eip" "nat01" {
   vpc = true
   tags = {
-    Name = "Nat01"
+    Name = "nat01"
   }
 }
 
 resource "aws_eip" "nat02" {
   vpc = true
   tags = {
-    Name = "Nat02"
+    Name = "nat02"
   }
 }
 
@@ -68,7 +68,7 @@ resource "aws_nat_gateway" "main01" {
   subnet_id     = aws_subnet.public01.id
 
   tags = {
-    Name = "Main01"
+    Name = "main01"
   }
 }
 
@@ -77,45 +77,45 @@ resource "aws_nat_gateway" "main02" {
   subnet_id     = aws_subnet.public02.id
 
   tags = {
-    Name = "Main02"
+    Name = "main02"
   }
 }
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
-  route = {
+  route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.main.id
   }
 
   tags = {
-    Name = "Public"
+    Name = "public"
   }
 }
 
 resource "aws_route_table" "private01" {
   vpc_id = aws_vpc.main.id
 
-  route = {
+  route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.main01.id
   }
 
   tags = {
-    Name = "Private01"
+    Name = "private01"
   }
 }
 
 resource "aws_route_table" "private02" {
   vpc_id = aws_vpc.main.id
 
-  route = {
+  route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.main02.id
   }
 
   tags = {
-    Name = "Private02"
+    Name = "private02"
   }
 }
 
